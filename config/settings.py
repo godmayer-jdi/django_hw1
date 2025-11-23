@@ -13,7 +13,7 @@ import os
 from dotenv import load_dotenv
 from pathlib import Path
 
-load_dotenv()
+load_dotenv(override=True) # перезаписывание переменных окружения из .env
 
 from django.conf.global_settings import STATICFILES_DIRS, MEDIA_URL, MEDIA_ROOT
 
@@ -25,10 +25,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-6&2va+6qws9mlsffspxb6$ek9!bat(!!*f3n%3!!6!&qgy(rt7'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True if os.getenv('DEBUG') == "True" else False
 
 ALLOWED_HOSTS = []
 
@@ -80,7 +80,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': os.getenv('django_project'),
         'USER': os.getenv('postgres'),
         'PASSWORD': os.getenv('0505'),
