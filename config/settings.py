@@ -9,8 +9,11 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
+import os
+from dotenv import load_dotenv
 from pathlib import Path
+
+load_dotenv()
 
 from django.conf.global_settings import STATICFILES_DIRS, MEDIA_URL, MEDIA_ROOT
 
@@ -78,11 +81,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'django_project',
-        'USER': 'postgres',
-        'PASSWORD': '0505',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': os.getenv('django_project'),
+        'USER': os.getenv('postgres'),
+        'PASSWORD': os.getenv('0505'),
+        'HOST': os.getenv('localhost'),
+        'PORT': os.getenv('5432'),
     }
 }
 
