@@ -1,6 +1,7 @@
 from django.db import models
-"""Создаем модель Category"""
+
 class Category(models.Model):
+    """Создаем модель Category"""
     objects = models.Manager()
     name = models.CharField("Наименование", max_length=255)
     description = models.TextField("Описание")
@@ -14,8 +15,9 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
-"""Создаем модель Product"""
+
 class Product(models.Model):
+    """Создаем модель Product"""
     objects = models.Manager()
     name = models.CharField("Наименование", max_length=255)
     description = models.TextField("Описание")
