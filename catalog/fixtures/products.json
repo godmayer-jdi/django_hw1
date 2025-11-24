@@ -3,8 +3,8 @@
   "model": "catalog.product",
   "pk": 1,
   "fields": {
-    "name": "Продукт 1",
-    "description": "Описание продукта 1",
+    "name": "пїЅпїЅпїЅпїЅпїЅпїЅпїЅ 1",
+    "description": "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 1",
     "image": "path/to/image1.jpg",
     "category": 3,
     "price": "150.00",
@@ -16,8 +16,8 @@
   "model": "catalog.product",
   "pk": 2,
   "fields": {
-    "name": "Продукт 2",
-    "description": "Описание продукта 2",
+    "name": "пїЅпїЅпїЅпїЅпїЅпїЅпїЅ 2",
+    "description": "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 2",
     "image": "path/to/image2.jpg",
     "category": 4,
     "price": "200.00",
