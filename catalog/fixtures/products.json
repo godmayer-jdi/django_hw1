@@ -1,0 +1,28 @@
+[
+{
+  "model": "catalog.product",
+  "pk": 4,
+  "fields": {
+    "name": "Продукт 1",
+    "description": "Описание продукта 1",
+    "image": "path/to/image1.jpg",
+    "category": 6,
+    "price": "150.00",
+    "created_at": "2025-11-24T18:50:02.467Z",
+    "updated_at": "2025-11-24T18:55:12.388Z"
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 6,
+  "fields": {
+    "name": "Продукт 3",
+    "description": "Описание продукта 3",
+    "image": "path/to/image3.jpg",
+    "category": 7,
+    "price": "300.00",
+    "created_at": "2025-11-24T18:51:30.507Z",
+    "updated_at": "2025-11-24T18:51:30.507Z"
+  }
+}
+]
