@@ -6,6 +6,7 @@ from . import views
 urlpatterns = [
     path("", views.home, name="home"),  # корень сайта будет вести на views.home
     path("contacts/", views.contacts, name="contacts"),
+    path("product_detail/<int:pk>/", views.product_detail, name="product_detail"),
 ]
 
 if settings.DEBUG:
