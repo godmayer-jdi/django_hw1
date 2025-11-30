@@ -13,8 +13,50 @@
 
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Отправить</button>
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <label for="{{ form.name.id_for_label }}" class="form-label fw-semibold">
+                    {{ form.name.label }}
+                </label>
+                {{ form.name }}
+                {% if form.name.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.name.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="col-md-6 mb-4">
+                <label for="{{ form.phone.id_for_label }}" class="form-label fw-semibold">
+                    {{ form.phone.label }}
+                </label>
+                {{ form.phone }}
+                {% if form.phone.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.phone.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <label for="{{ form.message.id_for_label }}" class="form-label fw-semibold">
+                {{ form.message.label }}
+            </label>
+            {{ form.message }}
+            {% if form.message.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.message.errors.0 }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="d-grid gap-2 d-md-flex justify-content-between">
+            <a href="{% url 'home' %}" class="btn btn-outline-secondary">Вернуться на главную</a>
+            <button type="submit" class="btn btn-primary btn-lg px-5">
+                <i class="bi bi-send-fill me-2"></i>Отправить
+            </button>
+        </div>
     </form>
 </div>
 {% endblock %}
