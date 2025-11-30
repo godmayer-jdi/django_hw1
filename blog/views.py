@@ -1,20 +1,29 @@
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse, reverse_lazy
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    DetailView,
+    ListView,
+    UpdateView,
+)
+
 from .models import BlogPost
+
 
 class BlogListView(ListView):
     model = BlogPost
-    template_name = 'blog/blog_list.html'
-    context_object_name = 'posts'
+    template_name = "blog/blog_list.html"
+    context_object_name = "posts"
     paginate_by = 3
 
     def get_queryset(self):
-        return BlogPost.objects.filter(is_published=True).order_by('-created_at')
+        return BlogPost.objects.filter(is_published=True).order_by("-created_at")
+
 
 class BlogDetailView(DetailView):
     model = BlogPost
-    template_name = 'blog/blog_detail.html'
-    context_object_name = 'post'
+    template_name = "blog/blog_detail.html"
+    context_object_name = "post"
 
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
@@ -22,22 +31,25 @@ class BlogDetailView(DetailView):
         obj.save()
         return obj
 
+
 class BlogCreateView(CreateView):
     model = BlogPost
-    fields = ['title', 'content', 'preview', 'is_published']
-    template_name = 'blog/blog_form.html'
-    success_url = reverse_lazy('blog:blog_list')
+    fields = ["title", "content", "preview", "is_published"]
+    template_name = "blog/blog_form.html"
+    success_url = reverse_lazy("blog:blog_list")
+
 
 class BlogUpdateView(UpdateView):
     model = BlogPost
-    fields = ['title', 'content', 'preview', 'is_published']
-    template_name = 'blog/blog_form.html'
-    success_url = '/blogs/{id}/'  # Перенаправление на страницу статьи
+    fields = ["title", "content", "preview", "is_published"]
+    template_name = "blog/blog_form.html"
+    success_url = "/blogs/{id}/"  # Перенаправление на страницу статьи
 
     def get_success_url(self):
-        return reverse('blog:blog_detail', kwargs={'pk': self.object.pk})
+        return reverse("blog:blog_detail", kwargs={"pk": self.object.pk})
+
 
 class BlogDeleteView(DeleteView):
     model = BlogPost
-    template_name = 'blog/blog_confirm_delete.html'
-    success_url = reverse_lazy('blog_list')
+    template_name = "blog/blog_confirm_delete.html"
+    success_url = reverse_lazy("blog_list")
