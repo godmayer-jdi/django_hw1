@@ -1,17 +1,10 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ product.name }} - Подробности о товаре</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-</head>
-<body>
-    <header>
-        <h1>{{ product.name }}</h1>
-    </header>
+{% extends 'catalog/base.html' %}
+{% load static %}
 
-    <main>
+{% block title %}Skystore Главная- Главная{% endblock %}
+
+{% block content %}
+    <div class="container">
         <div style="max-width: 600px; margin: auto;">
             <img src="{{ product.image.url }}" alt="{{ product.name }}" style="max-width: 100%; height: auto;">
             <p><strong>Категория:</strong> {{ product.category.name }}</p>
@@ -21,13 +14,6 @@
             <p><small>Создан: {{ product.created_at }}</small></p>
             <p><small>Обновлён: {{ product.updated_at }}</small></p>
         </div>
-        <p><a href="{% url 'home' %}">Вернуться на главную</a></p>
-    </main>
-
-    <footer style="text-align:center; padding: 15px; margin-top: 30px; border-top: 1px solid #ccc;">
-        © 2025 Skystore
-    </footer>
-
-    <script src="{% static 'js/script.js' %}"></script>
-</body>
-</html>
+        <p class="text-end mt-3"><a href="{% url 'home' %}">Вернуться на главную</a></p>
+    </div>
+{% endblock %}
