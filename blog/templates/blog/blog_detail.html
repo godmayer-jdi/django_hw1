@@ -1,0 +1,23 @@
+{% extends 'catalog/base.html' %}
+
+{% block title %}{{ post.title }} - Skystore{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <article>
+        <h1>{{ post.title }}</h1>
+        {% if post.preview %}
+        <img src="{{ post.preview.url }}" class="img-fluid mb-3" alt="{{ post.title }}">
+        {% endif %}
+        <div class="mb-3">
+            <span class="badge bg-secondary">Просмотров: {{ post.views_count }}</span>
+            <span class="badge bg-info">{{ post.created_at|date:"d.m.Y H:i" }}</span>
+        </div>
+        <div>{{ post.content|linebreaks }}</div>
+    </article>
+
+    <a href="{% url 'blog:blog_list' %}" class="btn btn-secondary mt-3">← К списку статей</a>
+    <a href="{% url 'blog:blog_update' post.pk %}" class="btn btn-warning mt-3">Редактировать</a>
+    <a href="{% url 'blog:blog_delete' post.pk %}" class="btn btn-danger mt-3">Удалить</a>
+</div>
+{% endblock %}

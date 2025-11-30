@@ -136,7 +136,51 @@ STATIC_URL = '/static/'
 - Создан базовый шаблон `base.html`, включающий общие элементы страницы: шапку, подвал, подключение стилей и скриптов.
 - Для главного меню сделан отдельный подшаблон `menu.html`, который подключается в `base.html` и используется на всех страницах.
 
+### Последнее задание: Рефакторинг на CBV + Блог
+
+####  Рефакторинг catalog (FBV → CBV)
+-  Все контроллеры переведены на Class-Based Views
+-  `HomeView` (ListView) - список товаров
+-  `ContactsView` (FormView) - форма контактов  
+-  `ProductDetailView` (DetailView) - детальная страница товара
+
+####  Новое приложение `blog`
+-  Создано и зарегистрировано в `INSTALLED_APPS`
+-  Модель `BlogPost` с полями: title, content, preview, created_at, is_published, views_count
+-  Полный CRUD через CBV: ListView, DetailView, CreateView, UpdateView, DeleteView
+
+####  Модификации блога
+-  **Счетчик просмотров** - переопределен `get_object()` в DetailView
+-  **Фильтрация** - только опубликованные статьи через `get_queryset()` в ListView
+-  **Перенаправление** - после редактирования → страница статьи (`success_url`)
+
+#### ️ Маршрутизация
+```
+blogs/          - список статей
+blogs/create/   - создать статью
+blogs/<pk>/     - просмотр статьи
+blogs/<pk>/update/ - редактировать
+blogs/<pk>/delete/ - удалить
+```
+
+####  Шаблоны блога
+- Все шаблоны используют `catalog/base.html`
+- Поддержка пагинации, изображений превью, счетчика просмотров
+
+####  Быстрый старт блога
+```
+python manage.py makemigrations blog
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py runserver 8000
+```
+
+**Админка:** `/admin/blog/blogpost/`  
+**Блог:** `/blogs/`
+
+
 ---
+
 ## Авторы
 
 Проект создан студентом SkyPro в учебных целях, для демонстрации полученных навыков работы с Django.
