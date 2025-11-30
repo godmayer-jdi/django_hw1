@@ -1,14 +1,14 @@
 {% extends 'catalog/base.html' %}
 {% load static %}
 
-{% block title %}Skystore Главная- Главная{% endblock %}
+{% block title %} Skystore - Главная{% endblock %}
 
 {% block content %}
     <div class="container">
         <div style="max-width: 600px; margin: auto;">
             <img src="{{ product.image.url }}" alt="{{ product.name }}" style="max-width: 100%; height: auto;">
-            <p><strong>Категория:</strong> {{ product.category.name }}</p>
-            <p><strong>Цена:</strong> {{ product.price }} руб.</p>
+            <p><strong>Категория:</strong> {{product.category.name}}</p>
+            <p><strong>Цена:</strong> {{product.price}} руб.</p>
             <p><strong>Описание:</strong></p>
             <p>{{ product.description }}</p>
             <p><small>Создан: {{ product.created_at }}</small></p>
