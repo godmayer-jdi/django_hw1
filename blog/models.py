@@ -9,6 +9,8 @@ class BlogPost(models.Model):
     is_published = models.BooleanField('Опубликовано', default=True)
     views_count = models.PositiveIntegerField('Просмотры', default=0)
 
+    objects = models.Manager()
+
     class Meta:
         verbose_name = 'Блоговая запись'
         verbose_name_plural = 'Блоговые записи'
