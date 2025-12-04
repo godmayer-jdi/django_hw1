@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render, get_object_or_404
-from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView
+from django.views.generic import TemplateView, ListView, CreateView, UpdateView, DeleteView
 from django.contrib import messages
 from django.urls import reverse_lazy
 from .forms import ProductForm, ContactForm
@@ -44,11 +44,17 @@ class ProductDetailView(TemplateView):
         return context
 
 
+class ProductListView(ListView):
+    model = Product
+    template_name = 'catalog/product_list.html'
+    context_object_name = 'products'
+
+
 class ProductCreateView(CreateView):
     model = Product
     form_class = ProductForm
     template_name = 'catalog/product_form.html'
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('catalog:product_list')
 
     def form_valid(self, form):
         messages.success(self.request, 'Продукт успешно создан!')
@@ -58,7 +64,7 @@ class ProductUpdateView(UpdateView):
     model = Product
     form_class = ProductForm
     template_name = 'catalog/product_form.html'
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('catalog:product_list')
 
     def form_valid(self, form):
         messages.success(self.request, 'Продукт успешно обновлен!')
@@ -67,7 +73,7 @@ class ProductUpdateView(UpdateView):
 class ProductDeleteView(DeleteView):
     model = Product
     template_name = 'catalog/product_confirm_delete.html'
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('catalog:product_list')
 
     def delete(self, request, *args, **kwargs):
         messages.success(request, 'Продукт успешно удален!')
