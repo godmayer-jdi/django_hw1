@@ -11,77 +11,122 @@
 - Используются HTML-шаблоны с Bootstrap для стилизации.
 - Статические файлы (CSS, JS) расположены в стандартной папке `catalog/static`.
 - Настроена маршрутизация с применением `include` для подключения URL из приложения.
+- Реализованы CRUD для продуктов.
+- Реализованы формы создания, редактирования и удаления продуктов с валидацией на запрещённые слова и отрицательную цену. Проект использует Bootstrap для стилизации форм и страниц.
 
 ---
 
 ## Структура проекта
 
 ```
-
 Django_HW1/
 ├── manage.py
-├── catalog/
+├── blog/
+│   ├── migrations/   
+│   │    ├── __init__.py
+│   │    └── 0001_initial.py
+│   ├── templates/
+│   │   └── blog/
+│   │       ├── blog_confirm_delete.html
+│   │       ├── blog_detail.html
+│   │       ├── blog_form.html
+│   │       └── blog_list.html
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── tests.py
 │   ├── urls.py
-│   ├── views.py
+│   └── views.py
+├── catalog/
+│   ├── fixtures/   
+│   │    ├── categories.json
+│   │    └── products.json
+│   ├── management/
+│   │   └── commands/
+│   │       ├── __init__.py
+│   │       └── load_test_data.py
+│   ├── migrations/   
+│   │    ├── __init__.py
+│   │    └── 0001_initial.py
 │   ├── templates/
 │   │   └── catalog/
+│   │       └── partials/
+│   │       │   ├── footer.html
+│   │       │   └── nav.html
+│   │       ├── base.html
+│   │       ├── contact.html
 │   │       ├── home.html
-│   │       └── contacts.html
-│   └── static/
-│       ├── css/
-│       │   └── bootstrap.min.css
-│       └── js/
-│           └── script.js
-└── config/
-├── __init__.py
-├── settings.py
-├── urls.py
+│   │       └── product_detail.html
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── forms.py
+│   ├── models.py
+│   ├── tests.py
+│   ├── urls.py
+│   └── views.py
+├── static/
+│   ├── css/
+│   │   └── bootstrap.min.css
+│   └── js/
+│        └── script.js
+├── config/
+│   ├── __init__.py
+│   ├── asgi.py
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+├── .flake8
+├── .gitignore
+├── .isort.cfg
+├── README.md
+├── requirements.txt
 └── ...
-
 ```
 
 ---
-
 ## Установка
 
-1. Клонировать репозиторий:
-
+### 1. Клонировать репозиторий
 ```
-
-git clone <адрес_репозитория>
+git clone <repository-url>
 cd Django_HW1
-
 ```
 
-2. Создать виртуальное окружение и активировать его:
-
+### 2. Создать виртуальное окружение
 ```
-
 python -m venv venv
-source venv/bin/activate       \# Linux/macOS
-venv\Scripts\activate          \# Windows
-
+```
+### Windows:
+```
+venv\Scripts\activate
+```
+### Linux/Mac:
+```
+source venv/bin/activate
 ```
 
-3. Установить зависимости:
-
+### 3. Установить зависимости
 ```
-
 pip install -r requirements.txt
-
 ```
 
----
+### 4. Настроить .env (скопировать .env.example)
+cp .env.example .env
+### Заполнить DB_NAME, DB_USER, DB_PASSWORD и SECRET_KEY
 
-## Запуск проекта
+### 5. Миграции и тестовые данные
+* python manage.py makemigrations
+* python manage.py migrate
+* python manage.py load_test_data
 
+### 6. Запустить сервер
 ```
-
 python manage.py runserver
-
 ```
-
 Открыть в браузере: [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
+
 
 ---
 
@@ -178,6 +223,45 @@ python manage.py runserver 8000
 **Админка:** `/admin/blog/blogpost/`  
 **Блог:** `/blogs/`
 
+---
+
+### Функциональность по заданию ver.26.1
+
+### Функционал
+
+* CRUD операции с продуктами (создание, чтение, обновление, удаление)
+* Формы с валидацией запрещённых слов в названии и описании продукта:
+* запрещённые слова: казино, криптовалюта, крипта, биржа, дешево, бесплатно, обман, полиция, радар
+* Кастомная валидация для поля цены — отрицательная цена не допускается
+* Валидация загрузки изображений — разрешены только JPG и PNG, размер не более 5 МБ
+* Использование Django Class-Based Views: ListView, CreateView, UpdateView, DeleteView
+* Стилизация форм и страниц с использованием Bootstrap 5
+
+### Изменения в проекте
+
+Добавлен файл `catalog/forms.py` с классом `ProductForm`, реализующим валидацию и стилизацию
+В `catalog/views.py` добавлены классы для CRUD:
+`
+ProductListView
+ProductCreateView
+ProductUpdateView
+ProductDeleteView
+`
+
+В `catalog/urls.py` добавлены маршруты для CRUD и зарегистрирован `app_name = 'catalog'`
+
+### Шаблоны:
+
+```
+catalog/templates/catalog/product_form.html — форма создания и редактирования продукта
+catalog/templates/catalog/product_confirm_delete.html — подтверждение удаления
+catalog/templates/catalog/product_list.html — вывод списка продуктов с кнопками CRUD
+```
+Скорректированы ссылки в шаблонах с учётом `namespace 'catalog'`
+
+В `config/settings.py` добавлены настройки `MEDIA_URL` и `MEDIA_ROOT` для загрузки изображений
+
+Валидация изображений в ProductForm проверяет расширения и размер файла
 
 ---
 
