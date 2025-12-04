@@ -6,4 +6,7 @@ urlpatterns = [
     path(
         "", include("catalog.urls")
     ),  # подключаем маршруты приложения catalog по корню сайта
+    path(
+        "blogs/", include("blog.urls")
+    ),  # подключаем маршруты приложения blog по корню сайта
 ]
