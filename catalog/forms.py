@@ -100,3 +100,19 @@ class ProductForm(forms.ModelForm):
         if forbidden:
             raise ValidationError(f'Запрещенные слова в названии: {", ".join(forbidden)}')
         return self.cleaned_data['name']
+
+    def clean_price(self):
+        """Кастомная валидация цены - Цена не может быть отрицательной"""
+        price = self.cleaned_data['price']
+        if price < 0:
+            raise ValidationError('Цена не может быть отрицательной!')
+        return price
+
+    def clean_image(self):
+        image = self.cleaned_data.get('image')
+        if image:
+            if not image.name.lower().endswith(('.jpg', '.jpeg', '.png')):
+                raise ValidationError('Разрешены только JPG и PNG файлы!')
+            if image.size > 5 * 1024 * 1024:  # 5MB
+                raise ValidationError('Размер изображения не превышает 5MB!')
+        return image
