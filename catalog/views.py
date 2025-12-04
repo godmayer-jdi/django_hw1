@@ -1,7 +1,8 @@
-from django.shortcuts import get_object_or_404
-from django.views.generic import TemplateView
-
-from .forms import ContactForm
+from django.shortcuts import redirect, render, get_object_or_404
+from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView
+from django.contrib import messages
+from django.urls import reverse_lazy
+from .forms import ProductForm, ContactForm
 from .models import Product
 
 
@@ -41,3 +42,33 @@ class ProductDetailView(TemplateView):
         pk = kwargs.get("pk")
         context["product"] = get_object_or_404(Product, pk=pk)
         return context
+
+
+class ProductCreateView(CreateView):
+    model = Product
+    form_class = ProductForm
+    template_name = 'catalog/product_form.html'
+    success_url = reverse_lazy('home')
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Продукт успешно создан!')
+        return super().form_valid(form)
+
+class ProductUpdateView(UpdateView):
+    model = Product
+    form_class = ProductForm
+    template_name = 'catalog/product_form.html'
+    success_url = reverse_lazy('home')
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Продукт успешно обновлен!')
+        return super().form_valid(form)
+
+class ProductDeleteView(DeleteView):
+    model = Product
+    template_name = 'catalog/product_confirm_delete.html'
+    success_url = reverse_lazy('home')
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(request, 'Продукт успешно удален!')
+        return super().delete(request, *args, **kwargs)
