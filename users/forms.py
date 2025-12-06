@@ -6,19 +6,30 @@ User = get_user_model()
 
 
 class CustomUserCreationForm(UserCreationForm):
+    email = forms.EmailField(
+        label="Email",
+        widget=forms.EmailInput(attrs={
+            'class': 'form-control form-control-lg',
+            'placeholder': 'email@example.com *'
+        })
+    )
+
     class Meta:
         model = User
-        fields = ('email', 'username', 'password1', 'password2')
+        fields = ('email', 'password1', 'password2')
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.username = user.email
+        if commit:
+            user.save()
+        return user
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['email'].widget.attrs.update({
             'class': 'form-control form-control-lg',
             'placeholder': 'email@example.com *'
-        })
-        self.fields['username'].widget.attrs.update({
-            'class': 'form-control form-control-lg',
-            'placeholder': 'Имя пользователя *'
         })
         self.fields['password1'].widget.attrs.update({
             'class': 'form-control form-control-lg',
