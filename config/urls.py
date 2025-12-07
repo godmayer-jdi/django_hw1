@@ -4,7 +4,7 @@ from django.urls import include, path
 urlpatterns = [
     path("admin/", admin.site.urls),
     path(
-        "", include("catalog.urls")
+        "", include("catalog.urls", namespace="catalog")
     ),  # подключаем маршруты приложения catalog по корню сайта
     path(
         "blogs/", include("blog.urls")

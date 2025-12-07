@@ -23,9 +23,9 @@
                 {% if user.is_authenticated %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            {{ user.username }}
+                            {{ user.email }}
                             {% if user.avatar %}
-                                <img src="{{ user.avatar.url }}" alt="{{ user.username }}" class="rounded-circle ms-1"
+                                <img src="{{ user.avatar.url }}" alt="{{ user.email }}" class="rounded-circle ms-1"
                                      style="width: 24px; height: 24px; object-fit: cover;">
                             {% else %}
                                 <i class="bi bi-person-circle"></i>
@@ -33,32 +33,35 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                             <li>
-                                <a class="dropdown-item" href="/users/profile/">
+                                <a class="dropdown-item" href="{% url 'users:profile' %}">
                                     <i class="bi bi-person-gear me-2"></i>Профиль
                                 </a>
                             </li>
                             <li><hr class="dropdown-divider"></li>
-                            <li>
+                            <!-- <li>
                                 <a class="dropdown-item" href="{% url 'catalog:product_create' %}">
                                     <i class="bi bi-plus-circle me-2"></i>Добавить товар
                                 </a>
-                            </li>
+                            </li> -->
                             <li><hr class="dropdown-divider"></li>
                             <li>
-                                <a class="dropdown-item text-danger" href="/users/logout/">
-                                    <i class="bi bi-box-arrow-right me-2"></i>Выход
-                                </a>
+                                <form action="{% url 'users:logout' %}" method="post" style="margin: 0;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="dropdown-item text-danger border-0 bg-transparent p-0 text-start w-100">
+                                        <i class="bi bi-box-arrow-right me-2"></i>Выход
+                                    </button>
+                                </form>
                             </li>
                         </ul>
                     </li>
                 {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="/users/login/">
+                        <a class="nav-link" href="{% url 'users:login' %}">
                             <i class="bi bi-box-arrow-in-right me-2"></i>Войти
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/users/register/">
+                        <a class="nav-link" href="{% url 'users:register' %}">
                             <i class="bi bi-person-plus me-2"></i>Регистрация
                         </a>
                     </li>
