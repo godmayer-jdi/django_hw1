@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse, reverse_lazy
 from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
                                   UpdateView)
@@ -33,18 +34,34 @@ class BlogCreateView(CreateView):
     template_name = "blog/blog_form.html"
     success_url = reverse_lazy("blog:blog_list")
 
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
 
-class BlogUpdateView(UpdateView):
+
+class BlogUpdateView(LoginRequiredMixin, UpdateView):
     model = BlogPost
     fields = ["title", "content", "preview", "is_published"]
     template_name = "blog/blog_form.html"
     success_url = "/blogs/{id}/"  # Перенаправление на страницу статьи
 
+    def get_queryset(self):
+        user = self.request.user
+        if user.groups.filter(name='Контент-менеджер').exists():
+            return BlogPost.objects.all()  # Менеджер - Все
+        return BlogPost.objects.filter(author=user)  # Автор — Только свои
+
     def get_success_url(self):
         return reverse("blog:blog_detail", kwargs={"pk": self.object.pk})
 
 
-class BlogDeleteView(DeleteView):
+class BlogDeleteView(LoginRequiredMixin, DeleteView):
     model = BlogPost
     template_name = "blog/blog_confirm_delete.html"
     success_url = reverse_lazy("blog_list")
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.groups.filter(name='Контент-менеджер').exists():
+            return BlogPost.objects.all()  # Менеджер - Все
+        return BlogPost.objects.filter(author=user)  # Автор — Только свои
