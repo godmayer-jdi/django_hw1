@@ -1,17 +1,103 @@
-from django.shortcuts import get_object_or_404, render
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import get_object_or_404
+from django.urls import reverse_lazy
+from django.views.generic import (CreateView, DeleteView, ListView,
+                                  TemplateView, UpdateView)
 
+from .forms import ContactForm, ProductForm
 from .models import Product
 
 
-def home(request):
-    products = Product.objects.all()
-    return render(request, "catalog/home.html", {"products": products})
+class HomeView(TemplateView):
+    template_name = "catalog/home.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["products"] = Product.objects.filter(
+            is_published=True
+        )  # Только опубликованные
+        return context
 
 
-def contacts(request):
-    return render(request, "catalog/contacts.html")
+class ContactsView(TemplateView):
+    template_name = "catalog/contacts.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.method == "POST":
+            context["form"] = ContactForm(self.request.POST)
+            if context["form"].is_valid():
+                context["form"].save()
+                context["success_message"] = "Спасибо за сообщение!"
+                context["form"] = ContactForm()  # Очистка формы
+        else:
+            context["form"] = ContactForm()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        return self.get(request, *args, **kwargs)  # Обрабатываем POST как GET
 
 
-def product_detail(request, pk):
-    product = get_object_or_404(Product, pk=pk)
-    return render(request, "catalog/product_detail.html", {"product": product})
+class ProductDetailView(TemplateView):
+    template_name = "catalog/product_detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pk = kwargs.get("pk")
+        context["product"] = get_object_or_404(Product, pk=pk)
+        return context
+
+
+class ProductListView(ListView):
+    model = Product
+    template_name = "catalog/product_list.html"
+    context_object_name = "products"
+
+    def get_queryset(self):
+        return Product.objects.filter(is_published=True)  # Только опубликованные
+
+
+class ProductCreateView(LoginRequiredMixin, CreateView):
+    model = Product
+    form_class = ProductForm
+    template_name = "catalog/product_form.html"
+    success_url = reverse_lazy("catalog:product_list")
+
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        messages.success(self.request, "Продукт успешно создан!")
+        return super().form_valid(form)
+
+
+class ProductUpdateView(LoginRequiredMixin, UpdateView):
+    model = Product
+    form_class = ProductForm
+    template_name = "catalog/product_form.html"
+    success_url = reverse_lazy("catalog:product_list")
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.groups.filter(name="Модератор продуктов").exists():
+            return Product.objects.all()
+        return Product.objects.filter(owner=user)
+
+    def form_valid(self, form):
+        messages.success(self.request, "Продукт успешно обновлен!")
+        return super().form_valid(form)
+
+
+class ProductDeleteView(LoginRequiredMixin, DeleteView):
+    model = Product
+    template_name = "catalog/product_confirm_delete.html"
+    success_url = reverse_lazy("catalog:product_list")
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.groups.filter(name="Модератор продуктов").exists():
+            return Product.objects.all()
+        return Product.objects.filter(owner=user)
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(request, "Продукт успешно удален!")
+        return super().delete(request, *args, **kwargs)
