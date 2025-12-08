@@ -78,7 +78,7 @@ FORBIDDEN_WORDS_DESCRIPTION = [
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ["name", "description", "image", "category", "price"]
+        fields = ["name", "description", "image", "category", "price, 'is_published', 'owner'"]
         widgets = {
             "name": forms.TextInput(
                 attrs={
