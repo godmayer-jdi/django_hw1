@@ -60,7 +60,18 @@ class ProductListView(ListView):
     context_object_name = "products"
 
     def get_queryset(self):
-        return Product.objects.filter(is_published=True)  # Только опубликованные
+        # Добавление низкоуровневого кэшширования (10 минут)
+        cache_key = 'product_list_all'
+        products = cache.get(cache_key)
+
+        if products is None:
+            products = Product.objects.filter(
+                is_published=True
+            ).select_related('category', 'owner').order_by('-created_at')
+            cache.set(cache_key, products, 60 * 10)  # 10 минут
+            print(f"ProductListView: кэш заполнен ({products.count()} продуктов)")
+
+        return products
 
 
 class ProductCreateView(LoginRequiredMixin, CreateView):
