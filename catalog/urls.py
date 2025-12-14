@@ -27,6 +27,8 @@ urlpatterns = [
         views.ProductDeleteView.as_view(),
         name="product_delete",
     ),
+    path('category/<int:category_id>/', views.ProductCategoryView.as_view(), name='product_category'
+    ),
 ]
 
 if settings.DEBUG:

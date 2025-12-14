@@ -6,10 +6,11 @@ from django.views.generic import (CreateView, DeleteView, ListView,
                                   TemplateView, UpdateView)
 
 from .forms import ContactForm, ProductForm
-from .models import Product
+from .models import Product, Category
 from django.views.decorators.cache import cache_page
 from django.utils.decorators import method_decorator
 from django.core.cache import cache
+from .services import get_products_by_category
 
 
 class HomeView(TemplateView):
@@ -105,3 +106,18 @@ class ProductDeleteView(LoginRequiredMixin, DeleteView):
     def delete(self, request, *args, **kwargs):
         messages.success(request, "Продукт успешно удален!")
         return super().delete(request, *args, **kwargs)
+
+
+class ProductCategoryView(ListView):
+    template_name = "catalog/product_category.html"
+    context_object_name = "products"
+
+    def get_queryset(self):
+        category_id = self.kwargs['category_id']
+        return get_products_by_category(category_id)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        category_id = self.kwargs['category_id']
+        context['category'] = get_object_or_404(Category, id=category_id)
+        return context
