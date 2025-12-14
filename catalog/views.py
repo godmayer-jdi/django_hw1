@@ -7,6 +7,9 @@ from django.views.generic import (CreateView, DeleteView, ListView,
 
 from .forms import ContactForm, ProductForm
 from .models import Product
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
+from django.core.cache import cache
 
 
 class HomeView(TemplateView):
@@ -39,6 +42,7 @@ class ContactsView(TemplateView):
         return self.get(request, *args, **kwargs)  # Обрабатываем POST как GET
 
 
+@method_decorator(cache_page(60 * 5), name='dispatch')  #Добавлен декоратор. Кэш 5 мин
 class ProductDetailView(TemplateView):
     template_name = "catalog/product_detail.html"
 
